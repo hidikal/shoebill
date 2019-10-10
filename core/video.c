@@ -90,11 +90,11 @@ void nubus_video_init(void *_ctx, uint8_t slotnum,
     ctx->pixels = scanline_width * height;
     ctx->line_offset = 0;
     
-    ctx->direct_buf = p_alloc(shoe.pool, (ctx->pixels+4) * sizeof(video_ctx_color_t));
-    ctx->temp_buf = p_alloc(shoe.pool, (ctx->pixels+4) * sizeof(video_ctx_color_t));
+    ctx->direct_buf = p_calloc(shoe.pool, uint8_t, (ctx->pixels+4) * sizeof(video_ctx_color_t));
+    ctx->temp_buf = p_calloc(shoe.pool, video_ctx_color_t, (ctx->pixels+4));
     
-    ctx->clut = p_alloc(shoe.pool, 256 * sizeof(video_ctx_color_t));
-    ctx->rom = p_alloc(shoe.pool, 4096);
+    ctx->clut = p_calloc(shoe.pool, video_ctx_color_t, 256);
+    ctx->rom = p_calloc(shoe.pool, uint8_t, 4096);
     
     // Set the depth and clut for B&W
     _switch_depth(ctx, 1);

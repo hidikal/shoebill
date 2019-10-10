@@ -190,7 +190,7 @@ static disk_t* open_disk (const char *disk_path, char *error_str)
     alloc_pool_t *pool = p_new_pool(NULL);
     FILE *f;
     
-    disk = p_alloc(pool, sizeof(disk_t));
+    disk = p_calloc(pool, disk_t, 1);
     
     disk->pool = pool;
     disk->block_size = 512;
@@ -242,8 +242,8 @@ static disk_t* open_disk (const char *disk_path, char *error_str)
     }
     
     disk->num_partitions = apm.pmMapBlkCnt;
-    disk->partition_maps = p_alloc(disk->pool, disk->num_partitions * sizeof(apple_partition_map_t));
-    disk->partitions = p_alloc(disk->pool, disk->num_partitions * sizeof(partition_t));
+    disk->partition_maps = p_calloc(disk->pool, apple_partition_map_t, disk->num_partitions);
+    disk->partitions = p_calloc(disk->pool, partition_t, disk->num_partitions);
     
     for (i=0; i<disk->num_partitions; i++) {
         if (!disk_load_partition_map(disk, &disk->partition_maps[i], i))
@@ -462,7 +462,7 @@ static uint8_t svfs_read_level(svfs_t *mount,
                                uint32_t *indirects,
                                uint32_t level)
 {
-    uint8_t *tmp = p_alloc(mount->pool, mount->blocksize);
+    uint8_t *tmp = p_calloc(mount->pool, uint8_t, mount->blocksize);
     const uint32_t num_indirects = mount->blocksize / 4;
     uint32_t i;
     
@@ -499,8 +499,8 @@ fail:
 
 static uint8_t* svfs_read_inode_data(svfs_t *mount, svfs_inode_t *inode)
 {
-    uint8_t *tmp = p_alloc(mount->pool, mount->blocksize);
-    uint8_t *buf = p_alloc(mount->pool, inode->size);
+    uint8_t *tmp = p_calloc(mount->pool, uint8_t, mount->blocksize);
+    uint8_t *buf = p_calloc(mount->pool, uint8_t, inode->size);
     uint32_t i, len = 0;
     
     // The first 10 block pointers in the inode point to data
@@ -555,7 +555,7 @@ static svfs_t* svfs_mount(partition_t *part)
     assert(sizeof(svfs_superblock_t) == 512);
     
     uint32_t i;
-    svfs_t *mount = p_alloc(part->pool, sizeof(svfs_t));
+    svfs_t *mount = p_calloc(part->pool, svfs_t, 1);
     mount->pool = part->pool;
     mount->error_str = part->error_str;
     mount->part = part;
@@ -617,8 +617,8 @@ svfs_inode_t* svfs_traverse_path(svfs_t *mount, const char *_path)
 {
     uint32_t i;
     uint16_t inum = 2; // 2 == root
-    svfs_inode_t *inode = p_alloc(mount->pool, sizeof(svfs_inode_t));
-    char *path = p_alloc(mount->pool, strlen(_path)+1);
+    svfs_inode_t *inode = p_calloc(mount->pool, svfs_inode_t, 1);
+    char *path = p_calloc(mount->pool, char, strlen(_path)+1);
     strcpy(path, _path);
     
     if (!svfs_load_inode(mount, inode, inum))
@@ -836,7 +836,7 @@ static uint8_t ufs_load_cylinder_group(ufs_t *mount, uint32_t frag_offset, ufs_c
     uint32_t numfrags = sizeof(ufs_cylinder_group_t) / mount->frag_size;
     numfrags += ((sizeof(ufs_cylinder_group_t) % mount->frag_size) != 0);
     
-    uint8_t *buf = p_alloc(mount->pool, (numfrags+1) * mount->frag_size);
+    uint8_t *buf = p_calloc(mount->pool, uint8_t, (numfrags+1) * mount->frag_size);
     uint32_t i;
     
     for (i=0; i <= numfrags; i++)
@@ -889,7 +889,7 @@ static uint8_t ufs_load_inode(ufs_t *mount, ufs_inode_t *inode, uint32_t inum)
     const uint32_t frag_offset = (group_ino_offset * 128) % mount->frag_size;
     
     uint32_t i;
-    uint8_t *buf = p_alloc(mount->pool, mount->frag_size);
+    uint8_t *buf = p_calloc(mount->pool, uint8_t, mount->frag_size);
     
     // slog("group_num = %u, ino_offset=%u, addr = 0x%08x, offset = 0x%08x\n", group_num, group_ino_offset, frag_addr, frag_offset);
     // slog("mount->superblock.iblkno = 0x%08x\n", mount->superblock.iblkno);
@@ -933,13 +933,15 @@ static uint8_t ufs_read_level(ufs_t *mount,
 {
     if (inode->size <= *len)
         return 1;
-    
-    uint32_t *table = p_alloc(mount->pool, mount->block_size);
+
+    const uint32_t num_pointers = mount->block_size / 4;
+    uint32_t *table = p_calloc(mount->pool, uint32_t, num_pointers);
     uint8_t *block = NULL;
     
-    const uint32_t num_pointers = mount->block_size / 4;
     uint32_t i;
     
+    assert(num_pointers * sizeof(*table) == mount->block_size);
+
     if (!ufs_read_block(mount, (uint8_t*)table, indirect_blockno))
         goto fail;
     
@@ -947,7 +949,7 @@ static uint8_t ufs_read_level(ufs_t *mount,
         // slog("%u 0x%08x\n", i, ntohl(table[i]));
     
     if (level == 1)
-        block = p_alloc(mount->pool, mount->block_size);
+        block = p_calloc(mount->pool, uint8_t, mount->block_size);
     
     for (i=0; (i < num_pointers) && (inode->size > *len); i++) {
         const uint32_t blockno = ntohl(table[i]);
@@ -996,8 +998,8 @@ fail:
 static uint8_t* ufs_read_inode_data(ufs_t *mount, ufs_inode_t *inode)
 {
     uint32_t i, j;
-    uint8_t *block = p_alloc(mount->pool, mount->block_size);
-    uint8_t *buf = p_alloc(mount->pool, inode->size);
+    uint8_t *block = p_calloc(mount->pool, uint8_t, mount->block_size);
+    uint8_t *buf = p_calloc(mount->pool, uint8_t, inode->size);
     size_t len = 0;
     
     /* Read in direct blocks */
@@ -1052,8 +1054,8 @@ ufs_inode_t* ufs_traverse_path(ufs_t *mount, const char *_path)
 {
     uint32_t i;
     uint32_t inum = 2; // 2 == root
-    ufs_inode_t *inode = p_alloc(mount->pool, sizeof(ufs_inode_t));
-    char *path = p_alloc(mount->pool, strlen(_path)+1);
+    ufs_inode_t *inode = p_calloc(mount->pool, ufs_inode_t, 1);
+    char *path = p_calloc(mount->pool, char, strlen(_path)+1);
     strcpy(path, _path);
     
     if (!ufs_load_inode(mount, inode, inum))
@@ -1110,8 +1112,8 @@ fail:
 
 static ufs_t* ufs_mount(partition_t *part)
 {
-    ufs_t *mount = p_alloc(part->pool, sizeof(ufs_t));
-    uint8_t *buf = p_alloc(part->pool, 32 * 512);
+    ufs_t *mount = p_calloc(part->pool, ufs_t, 1);
+    uint8_t *buf = p_calloc(part->pool, uint8_t, 32 * 512);
     uint32_t i;
     
     mount->pool = part->pool;
@@ -1192,8 +1194,7 @@ static ufs_t* ufs_mount(partition_t *part)
     assert(mount->block_size == mount->superblock.bsize);
     
     mount->num_groups = mount->superblock.ncg;
-    mount->groups = (ufs_cylinder_group_t*)p_alloc(mount->pool,
-                                                   mount->num_groups * sizeof(ufs_cylinder_group_t));
+    mount->groups = p_calloc(mount->pool, ufs_cylinder_group_t, mount->num_groups);
     
     for (i=0; i<mount->num_groups; i++) {
         uint32_t group_base = ufs_group_base(mount, i) + mount->superblock.cblkno;

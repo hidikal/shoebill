@@ -79,7 +79,7 @@ coff_file* coff_parse(uint8_t *buf, uint32_t buflen, alloc_pool_t *parent_pool)
     }
     
     // Allocate a coff_file and copy in the header
-    cf = (coff_file*)p_alloc(pool, sizeof(coff_file));
+    cf = p_calloc(pool, coff_file, 1);
     cf->pool = pool;
     ptr = rawhead;
     
@@ -103,7 +103,7 @@ coff_file* coff_parse(uint8_t *buf, uint32_t buflen, alloc_pool_t *parent_pool)
     
     // pull out cf->opt_header bytes (a.out-format header, I guess?)
     if (cf->opt_header_len > 0) {
-        uint8_t *opt = p_alloc(cf->pool, cf->opt_header_len);
+        uint8_t *opt = p_calloc(cf->pool, uint8_t, cf->opt_header_len);
         if (!_coff_buf_read(opt, cf->opt_header_len)) {
             slog("coff_parse: I ran out of data pulling the optional header (%u bytes)\n", cf->opt_header_len);
             p_free(opt);
@@ -113,7 +113,7 @@ coff_file* coff_parse(uint8_t *buf, uint32_t buflen, alloc_pool_t *parent_pool)
     }
     
     // start pulling out sections
-    cf->sections = p_alloc(cf->pool, cf->num_sections * sizeof(coff_section));
+    cf->sections = p_calloc(cf->pool, coff_section, cf->num_sections);
     for (i=0; i<cf->num_sections; i++) {
         // read the header
         uint8_t rawsec[40];
@@ -163,7 +163,7 @@ coff_file* coff_parse(uint8_t *buf, uint32_t buflen, alloc_pool_t *parent_pool)
         }
         
         // load the data and attach it to the section struct
-        data = p_alloc(cf->pool, cf->sections[i].sz); // FIXME: sz might not be a sane value
+        data = p_calloc(cf->pool, uint8_t, cf->sections[i].sz); // FIXME: sz might not be a sane value
         if (!_coff_buf_read(data, cf->sections[i].sz)) {
             slog("coff_parse: I couldn't fread section %u (%s)'s data (%u bytes)\n", i+1, cf->sections[i].name, cf->sections[i].sz);
             p_free(data);
@@ -179,7 +179,7 @@ coff_file* coff_parse(uint8_t *buf, uint32_t buflen, alloc_pool_t *parent_pool)
     
     cf->func_tree = rb_new(cf->pool, sizeof(coff_symbol*));
     //slog("func_tree = %llx, *func_tree = %llx\n", cf->func_tree, *cf->func_tree);
-    cf->symbols = (coff_symbol*)p_alloc(cf->pool, sizeof(coff_symbol) *cf->num_symbols);
+    cf->symbols = p_calloc(cf->pool, coff_symbol, cf->num_symbols);
     
     // Seek to the symbol table
     if (!_coff_buf_seek(cf->symtab_offset)) {
@@ -213,7 +213,7 @@ coff_file* coff_parse(uint8_t *buf, uint32_t buflen, alloc_pool_t *parent_pool)
                     goto fail;
                 }
             }
-            cf->symbols[i].name = p_alloc(cf->pool, j+1);
+            cf->symbols[i].name = p_calloc(cf->pool, char, j+1);
             memcpy(cf->symbols[i].name, tmp_name, j);
             cf->symbols[i].name[j] = 0;
             _coff_buf_seek(cf->symtab_offset + (i+1)*18);

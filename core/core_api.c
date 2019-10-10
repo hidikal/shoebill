@@ -387,7 +387,7 @@ static uint32_t _compute_rom_checksum (const uint8_t *rom, const uint32_t len)
 static uint32_t _load_rom (shoebill_config_t *config, uint8_t **_rom_data, uint32_t *_rom_size)
 {
     uint32_t i, rom_size;
-    uint8_t *rom_data = (uint8_t*)p_alloc(shoe.pool, 64 * 1024);
+    uint8_t *rom_data = p_calloc(shoe.pool, uint8_t, 64 * 1024);
     FILE *f = fopen(config->rom_path, "rb");
     
     if (f == NULL) {
@@ -464,7 +464,7 @@ static uint32_t _open_disk_images (shoebill_config_t *config, scsi_device_t *dis
         
         disks[i].scsi_id = i;
         disks[i].f = f;
-        tmp = p_alloc(shoe.pool, strlen(path) + 1);
+        tmp = p_calloc(shoe.pool, char, strlen(path) + 1);
         strcpy(tmp, path);
         disks[i].image_path = tmp;
                             
@@ -541,7 +541,7 @@ uint32_t shoebill_install_video_card(shoebill_config_t *config, uint8_t slotnum,
         return 0;
     }
     
-    ctx = p_alloc(shoe.pool, sizeof(shoebill_card_video_t));
+    ctx = p_calloc(shoe.pool, shoebill_card_video_t, 1);
     shoe.slots[slotnum].ctx = ctx;
     
     shoe.slots[slotnum].card_type = card_shoebill_video;
@@ -571,7 +571,7 @@ uint32_t shoebill_install_tfb_card(shoebill_config_t *config, uint8_t slotnum)
         return 0;
     }
     
-    ctx = p_alloc(shoe.pool, sizeof(shoebill_card_tfb_t));
+    ctx = p_calloc(shoe.pool, shoebill_card_tfb_t, 1);
     shoe.slots[slotnum].ctx = ctx;
     
     shoe.slots[slotnum].card_type = card_toby_frame_buffer;
@@ -594,7 +594,7 @@ uint32_t shoebill_install_ethernet_card(shoebill_config_t *config, uint8_t slotn
         return 0;
     }
     
-    ctx = p_alloc(shoe.pool, sizeof(shoebill_card_ethernet_t));
+    ctx = p_calloc(shoe.pool, shoebill_card_ethernet_t, 1);
     shoe.slots[slotnum].ctx = ctx;
     
     shoe.slots[slotnum].card_type = card_shoebill_ethernet;
@@ -703,13 +703,13 @@ uint32_t shoebill_initialize(shoebill_config_t *config)
     }
     
     shoe.physical_rom_size = rom_size;
-    shoe.physical_rom_base = p_alloc(shoe.pool, rom_size+8); // +8 because of physical_get hack
+    shoe.physical_rom_base = p_calloc(shoe.pool, uint8_t, rom_size+8); // +8 because of physical_get hack
     memcpy(shoe.physical_rom_base, rom_data, rom_size);
     p_free(rom_data);
     rom_data = NULL;
     
     shoe.physical_mem_size = config->ram_size;
-    shoe.physical_mem_base = p_alloc(shoe.pool, config->ram_size+8); // +8 because of physical_get hack
+    shoe.physical_mem_base = p_calloc(shoe.pool, uint8_t, config->ram_size+8); // +8 because of physical_get hack
     memset(shoe.physical_mem_base, 0, shoe.physical_mem_size);
     
     // Initialize Macintosh lomem variables that A/UX actually cares about

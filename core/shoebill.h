@@ -316,6 +316,9 @@ void p_free(void *ptr);
 void p_free_pool(alloc_pool_t *pool);
 alloc_pool_t* p_new_pool(alloc_pool_t *parent_pool);
 
+#define p_calloc(pool, type, count) \
+    ( (type *)p_alloc((pool), sizeof(type) * (count)) )
+
 /*
  * redblack.c
  */

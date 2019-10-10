@@ -88,10 +88,10 @@ void nubus_tfb_init(void *_ctx, uint8_t slotnum)
 {
     shoebill_card_tfb_t *ctx = (shoebill_card_tfb_t*)_ctx;
     
-    ctx->direct_buf = p_alloc(shoe.pool, 512 * 1024 + 4);
-    ctx->temp_buf = p_alloc(shoe.pool, 640 * 480 * 4);
-    ctx->rom = p_alloc(shoe.pool, 4096);
-    ctx->clut = p_alloc(shoe.pool, 256 * 3);
+    ctx->direct_buf = p_calloc(shoe.pool, uint8_t, 512 * 1024 + 4);
+    ctx->temp_buf = p_calloc(shoe.pool, uint8_t, 640 * 480 * 4);
+    ctx->rom = p_calloc(shoe.pool, uint8_t, 4096);
+    ctx->clut = p_calloc(shoe.pool, uint8_t, 256 * 3);
     
     ctx->clut_idx = 786;
     ctx->line_offset = 0;
