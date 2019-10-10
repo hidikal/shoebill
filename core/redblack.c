@@ -50,7 +50,7 @@ uint8_t rb_insert(rb_tree *tree, rb_key_t key, void *value, void *old_value)
     
     // Special edge case: insert the root node if tree's empty
     if (*root == NULL) {
-        *root = p_alloc(tree->pool, alloc_size);
+        *root = (rb_node *)p_alloc(tree->pool, alloc_size);
         (*root)->key = key;
         memcpy(&(*root)[1], value, tree->sz);
         return 0;
@@ -73,7 +73,7 @@ uint8_t rb_insert(rb_tree *tree, rb_key_t key, void *value, void *old_value)
     }
     
     // insert
-    *cur = p_alloc(tree->pool, alloc_size);
+    *cur = (rb_node *)p_alloc(tree->pool, alloc_size);
     (*cur)->parent = parent;
     (*cur)->key = key;
     (*cur)->is_red = 1;
