@@ -814,7 +814,7 @@ float128 _from_native(double n)
 #define _native_log2(a) (log(a) / log(2.0)) /* or log2() */
 #define _native_log(a) log(a)
 #define _native_log1p(a) log((a) + 1.0) /* or log1p() */
-double  _native_tentox(a) {
+double  _native_tentox(double a) {
     /*
      * This is a dumb workaround for a clang bug on OS X 10.10
      * Clang wants to optimize pow(10.0, a) to __exp(a), but
