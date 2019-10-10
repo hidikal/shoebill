@@ -590,15 +590,16 @@ static svfs_t* svfs_mount(partition_t *part)
     }
     
     // It is SVFS!
-    
-    const uint32_t type = mount->superblock.type;
-    if ((type != 1) && (type != 2) && (type != 4) && (type != 8)) {
-        sprintf(part->error_str, "Unknown SVFS type (%u)", type);
-        goto fail;
+    {
+        const uint32_t type = mount->superblock.type;
+        if ((type != 1) && (type != 2) && (type != 4) && (type != 8)) {
+            sprintf(part->error_str, "Unknown SVFS type (%u)", type);
+            goto fail;
+        }
+        
+        mount->blocksize = 512 * type;
     }
-    
-    mount->blocksize = 512 * type;
-    
+
     return mount;
     
 fail:
