@@ -65,7 +65,7 @@ static alloc_pool_t* _ptr_to_header(void *ptr)
     return &apt[-1];
 }
 
-void* p_alloc(alloc_pool_t *pool, uint64_t size)
+void* p_alloc(alloc_pool_t *pool, size_t size)
 {
     alloc_pool_t *buf = calloc(sizeof(alloc_pool_t) + size, 1);
     
@@ -85,7 +85,7 @@ void* p_alloc(alloc_pool_t *pool, uint64_t size)
     return &buf[1];
 }
 
-void* p_realloc(void *ptr, uint64_t size)
+void* p_realloc(void *ptr, size_t size)
 {
     alloc_pool_t *header = _ptr_to_header(ptr);
 

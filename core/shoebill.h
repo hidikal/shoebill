@@ -296,7 +296,7 @@ typedef struct _alloc_pool_t {
 
     union {
         struct {
-            uint64_t size;
+            size_t size;
         } alloc;
         struct {
             struct _alloc_pool_t *child; // pointer to the child's HEAD
@@ -310,8 +310,8 @@ typedef struct _alloc_pool_t {
     uint32_t end_magic;
 } alloc_pool_t;
 
-void* p_alloc(alloc_pool_t *pool, uint64_t size);
-void* p_realloc(void *ptr, uint64_t size);
+void* p_alloc(alloc_pool_t *pool, size_t size);
+void* p_realloc(void *ptr, size_t size);
 void p_free(void *ptr);
 void p_free_pool(alloc_pool_t *pool);
 alloc_pool_t* p_new_pool(alloc_pool_t *parent_pool);
