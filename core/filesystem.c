@@ -1255,7 +1255,7 @@ uint8_t* shoebill_extract_kernel(const char *disk_path, const char *kernel_path,
         if (!pool_data)
             goto done;
         
-        kernel_data = malloc(inode->size);
+        kernel_data = (uint8_t *)malloc(inode->size);
         memcpy(kernel_data, pool_data, inode->size);
         *len = inode->size;
         goto done;
@@ -1271,7 +1271,7 @@ uint8_t* shoebill_extract_kernel(const char *disk_path, const char *kernel_path,
         if (!pool_data)
             goto done;
         
-        kernel_data = malloc(inode->size);
+        kernel_data = (uint8_t *)malloc(inode->size);
         memcpy(kernel_data, pool_data, inode->size);
         *len = inode->size;
         goto done;
