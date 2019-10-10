@@ -927,7 +927,7 @@ fail:
 static uint8_t ufs_read_level(ufs_t *mount,
                               ufs_inode_t *inode,
                               uint8_t *buf,
-                              uint64_t *len,
+                              size_t *len,
                               uint32_t indirect_blockno,
                               uint32_t level)
 {
@@ -954,7 +954,7 @@ static uint8_t ufs_read_level(ufs_t *mount,
         
         if (level == 1) {
             // direct block
-            uint64_t chunk_size = inode->size - *len;
+            size_t chunk_size = inode->size - *len;
             if (chunk_size > mount->block_size) chunk_size = mount->block_size;
             
             // Which block are we reading, and at which byte-offset into it does our data exist
@@ -998,13 +998,13 @@ static uint8_t* ufs_read_inode_data(ufs_t *mount, ufs_inode_t *inode)
     uint32_t i, j;
     uint8_t *block = p_alloc(mount->pool, mount->block_size);
     uint8_t *buf = p_alloc(mount->pool, inode->size);
-    uint64_t len = 0;
+    size_t len = 0;
     
     /* Read in direct blocks */
     for (i=0; (i<12) && (len < inode->size); i++) {
         
         // How many bytes are we reading from this block?
-        uint64_t chunk_size = inode->size - len;
+        size_t chunk_size = inode->size - len;
         if (chunk_size > mount->block_size) chunk_size = mount->block_size;
         
         // Which block are we reading, and at which byte-offset into it does our data exist
