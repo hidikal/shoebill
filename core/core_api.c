@@ -620,9 +620,9 @@ shoebill_video_frame_info_t shoebill_get_video_frame(uint8_t slotnum,
     void *ctx = shoe.slots[slotnum].ctx;
     
     if (shoe.slots[slotnum].card_type == card_toby_frame_buffer)
-        return nubus_tfb_get_frame(ctx, just_params);
+        return nubus_tfb_get_frame((shoebill_card_tfb_t *)ctx, just_params);
     else if (shoe.slots[slotnum].card_type == card_shoebill_video)
-        return nubus_video_get_frame(ctx, just_params);
+        return nubus_video_get_frame((shoebill_card_video_t *)ctx, just_params);
     
     assert(!"Unknown card type");
     
