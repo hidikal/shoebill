@@ -276,12 +276,12 @@ fail:
 coff_file* coff_parse_from_path(const char *path, alloc_pool_t *parent_pool)
 {
     FILE *f = fopen(path, "rb");
-    uint8_t *buf = malloc(1);
+    uint8_t *buf = (uint8_t *)malloc(1);
     uint32_t i=0, tmp;
     coff_file *coff;
     
     do {
-        buf = realloc(buf, i + 128*1024);
+        buf = (uint8_t *)realloc(buf, i + 128*1024);
         assert(buf);
         tmp = fread(buf+i, 1, 128*1024, f);
         i += tmp;
