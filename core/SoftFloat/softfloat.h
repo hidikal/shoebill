@@ -30,6 +30,10 @@ these four paragraphs for those parts of this code that are retained.
 
 =============================================================================*/
 
+#ifdef __cplusplus
+    extern "C" {
+#endif
+
 /*----------------------------------------------------------------------------
 | The macro `FLOATX80' must be defined to enable the extended double-precision
 | floating-point format `floatx80'.  If this macro is not defined, the
@@ -255,5 +259,9 @@ char float128_le_quiet( float128, float128 );
 char float128_lt_quiet( float128, float128 );
 char float128_is_signaling_nan( float128 );
 
+#endif
+
+#ifdef __cplusplus
+    }
 #endif
 

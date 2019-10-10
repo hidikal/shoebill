@@ -910,8 +910,17 @@ static float128 _hack_twotox (float128 x) {
 #pragma mark FMATH! and all its helpers
 
 /* Function prototypes from SoftFloat/softfloat-specialize.h */
+
+#ifdef __cplusplus
+    extern "C" {
+#endif
+
 char float128_is_nan(float128 a);
 char float128_is_signaling_nan (float128 a);
+
+#ifdef __cplusplus
+    }
+#endif
 
 
 static void inst_fmath_fmovecr (void)
