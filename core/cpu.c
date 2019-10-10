@@ -3276,10 +3276,12 @@ static void inst_trap (void) {
     push_a7(shoe.orig_sr, 2);
     if sunlikely(shoe.abort) goto fail;
     
-    const uint32_t newpc = lget(shoe.vbr + vector_offset, 4);
-    if sunlikely(shoe.abort) goto fail;
-    
-    shoe.pc = newpc;
+    {
+        const uint32_t newpc = lget(shoe.vbr + vector_offset, 4);
+        if sunlikely(shoe.abort) goto fail;
+        
+        shoe.pc = newpc;
+    }
     return ;
     
 fail:
