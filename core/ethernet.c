@@ -197,7 +197,7 @@ void *_ethernet_receiver_thread(void *arg)
 {
     const uint8_t multicast_addr[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
     shoebill_card_ethernet_t *ctx = (shoebill_card_ethernet_t*)arg;
-    uint8_t *buf = malloc(4096);
+    uint8_t *buf = (uint8_t *)malloc(4096);
     assert(buf);
     
     // While nubus_ethernet_destroy() hasn't been called
