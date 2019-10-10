@@ -32,8 +32,8 @@
 #pragma mark Structures and macros
 
 // Mode control byte
-#define mc_rnd  (fpu->fpcr.b._mc_rnd)
-#define mc_prec (fpu->fpcr.b._mc_prec)
+#define mc_rnd  ((const enum rounding_mode_t)(fpu->fpcr.b._mc_rnd))
+#define mc_prec ((const enum rounding_precision_t)(fpu->fpcr.b._mc_prec))
 
 // Exception enable byte
 #define ee_inex1 (fpu->fpcr.b._ee_inex1)
@@ -194,15 +194,15 @@ enum fpu_vector_t {
  * Map the exception bit positions (in fpsr and fpcr)
  * to their corresponding exception vector numbers.
  */
-const uint8_t _exception_bit_to_vector[8] = {
-    48, // bsun
-    54, // snan
-    52, // operr
-    53, // ovfl
-    51, // unfl
-    50, // dz
-    49, // inex2
-    49, // inex1
+const enum fpu_vector_t _exception_bit_to_vector[8] = {
+    fpu_vector_bsun, // 48, bsun
+    fpu_vector_snan, // 54, snan
+    fpu_vector_operr, // 52, operr
+    fpu_vector_overflow, // 53, ovfl
+    fpu_vector_underflow, // 51, unfl
+    fpu_vector_divide_by_zero, // 50, dz
+    fpu_vector_inexact, // 49, inex2
+    fpu_vector_inexact // 49, inex1
 };
 
 static void throw_fpu_pre_instruction_exception(enum fpu_vector_t vector)
@@ -348,7 +348,7 @@ static float128 _extended_to_intermediate(uint8_t *e)
      * uint16_t high; // the high part, sign, high exponent bits
      */
     floatx80 x80 = {
-        .high = (e[0] << 8) | e[1],
+        .high = (unsigned short)((e[0] << 8) | e[1]),
         .low = ntohll(*(uint64_t*)&e[4])
     };
     return floatx80_to_float128(x80);
