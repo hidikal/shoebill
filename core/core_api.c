@@ -410,13 +410,15 @@ static uint32_t _load_rom (shoebill_config_t *config, uint8_t **_rom_data, uint3
     }
     
     // Check the checksum
-    const uint32_t computed_checksum = _compute_rom_checksum(rom_data, rom_size);
-    const uint32_t purported_checksum = ntohl(*(uint32_t*)rom_data);
-    if (computed_checksum != purported_checksum) {
-        sprintf(config->error_msg,
-                "Rom checksum doesn't match (computed=0x%08x, expected=0x%08x)\n",
-                computed_checksum, purported_checksum);
-        goto fail;
+    {
+        const uint32_t computed_checksum = _compute_rom_checksum(rom_data, rom_size);
+        const uint32_t purported_checksum = ntohl(*(uint32_t*)rom_data);
+        if (computed_checksum != purported_checksum) {
+            sprintf(config->error_msg,
+                    "Rom checksum doesn't match (computed=0x%08x, expected=0x%08x)\n",
+                    computed_checksum, purported_checksum);
+            goto fail;
+        }
     }
     
     // rom_data = p_realloc(rom_data, rom_size);
