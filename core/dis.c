@@ -1325,7 +1325,7 @@ void dis_movec() {
     const uint16_t ext = dis_next_word();
     ~decompose(dis_op, 0100 1110 0111 101x);
     ~decompose(ext, t rrr cccccccccccc);
-    char *c_reg;
+    const char *c_reg;
     switch (c) {
         case 0x002:  // CACR
             c_reg = "cacr";
