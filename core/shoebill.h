@@ -82,6 +82,11 @@
 #define slikely(e) (__builtin_expect(!!(e), 1))
 #define sunlikely(e) (__builtin_expect(!!(e), 0))
 
+
+#ifdef __cplusplus
+    extern "C" {
+#endif
+
 /*
  * core_api.c stuff
  */
@@ -1088,5 +1093,9 @@ void nubus_ethernet_init(void *_ctx, uint8_t slotnum, uint8_t ethernet_addr[6], 
 uint32_t nubus_ethernet_read_func(uint32_t, uint32_t, uint8_t);
 void nubus_ethernet_write_func(uint32_t, uint32_t, uint32_t, uint8_t);
 void nubus_ethernet_destroy_func(uint8_t);
+
+#ifdef __cplusplus
+    }
+#endif
 
 #endif // _SHOEBILL_H
