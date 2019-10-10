@@ -67,7 +67,7 @@ static alloc_pool_t* _ptr_to_header(void *ptr)
 
 void* p_alloc(alloc_pool_t *pool, size_t size)
 {
-    alloc_pool_t *buf = calloc(sizeof(alloc_pool_t) + size, 1);
+    alloc_pool_t *buf = (alloc_pool_t *)calloc(sizeof(alloc_pool_t) + size, 1);
     
     buf->type = POOL_ALLOC_TYPE;
     buf->t.alloc.size = size;
@@ -93,7 +93,7 @@ void* p_realloc(void *ptr, size_t size)
     assert(header->end_magic == POOL_END_MAGIC);
     assert(header->type == POOL_ALLOC_TYPE);
     
-    alloc_pool_t *new_header = realloc(header, size + sizeof(alloc_pool_t));
+    alloc_pool_t *new_header = (alloc_pool_t *)realloc(header, size + sizeof(alloc_pool_t));
     
     if (new_header) {
         new_header->t.alloc.size = size;
@@ -175,7 +175,7 @@ void p_free_pool(alloc_pool_t *pool)
 
 alloc_pool_t* p_new_pool(alloc_pool_t *parent_pool)
 {
-    alloc_pool_t *pool = calloc(sizeof(alloc_pool_t), 1);
+    alloc_pool_t *pool = (alloc_pool_t *)calloc(sizeof(alloc_pool_t), 1);
     
     pool->start_magic = POOL_START_MAGIC;
     pool->end_magic = POOL_END_MAGIC;
