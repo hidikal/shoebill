@@ -34,7 +34,7 @@
 #include <stdlib.h>
 #include "../core/shoebill.h"
 
-char *via_reg_str[16] = {
+const char *via_reg_str[16] = {
     "regb",
     "rega",
     "ddrb",
