@@ -422,7 +422,7 @@ void dis_mc68851_pmove(uint16_t ext) {
     // instruction format #1
     if (f == ~b(010)) {
         const uint8_t sizes[8] = {4, 8, 8, 8, 1, 1, 1, 2};
-        char *names[8] = {
+        const char *names[8] = {
             "tc", "drp", "srp", "crp", "cal", "val", "scc", "ac"
         };
         
@@ -434,7 +434,7 @@ void dis_mc68851_pmove(uint16_t ext) {
         return ;
     }
     else if (f == ~b(011)) {
-        char *names[8] = {"psr" , "pcsr", "?", "?", "?", "?", "?", "?"};
+        const char *names[8] = {"psr" , "pcsr", "?", "?", "?", "?", "?", "?"};
         if (w)
             sprintf(dis.str, "pmove %s,%s", names[p], decode_ea_rw(M, 2));
         else
