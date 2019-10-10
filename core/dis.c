@@ -292,7 +292,10 @@ char* decode_ea_rw (uint8_t mr, uint8_t sz)
             }
         }
     }
-    return "error: dis: Never get here!";
+
+    assert(!"never get here");
+
+    return strcpy(str, "ERROR");
 }
 
 char* decode_ea_addr (uint8_t mr)
@@ -364,7 +367,10 @@ char* decode_ea_addr (uint8_t mr)
             }
         }
     }
-    return "Error: decode_ea_addr: never get here!";
+
+    assert(!"never get here");
+
+    return strcpy(str, "ERROR");
 }
 
 //
