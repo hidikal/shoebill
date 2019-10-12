@@ -339,6 +339,7 @@ sub macro_decompose {
 	
 	my $lastc = "";
 	my %symbols;
+	my @keys = ();
 	for (my $i = 0; $i < scalar(@spaceless); $i++) {
 		my $c = $spaceless[$i];
 		if (index("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ", $c) != -1) {
@@ -353,6 +354,7 @@ sub macro_decompose {
 					start => $i,
 					len => 1
 				};
+				unshift(@keys, $c);
 			}
 		}
 		
@@ -360,7 +362,7 @@ sub macro_decompose {
 	}
 	
 	my $output = "";
-	foreach my $key (keys %symbols) {
+	foreach my $key (@keys) {
 		my $dat = $symbols{$key};
 		my $mask = sprintf("0x%x", (2 ** $dat->{len})-1);
 		$output .= sprintf("const uint16_t %s = ((%s)>>%u)&%s;\n", $key, $op, $dat->{start}, $mask);
