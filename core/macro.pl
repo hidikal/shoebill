@@ -35,10 +35,19 @@ main();
 sub main {
 	
 	my $input = "";
+
+	my $argc = $#ARGV + 1;
 	
-	if (($#ARGV) != 1) {
-		my $args = $#ARGV + 1;
-		croak "I need two arguments (got $args)";
+	if ($argc < 2) {
+		croak "I need at least two arguments (got $argc)";
+	}
+
+	my $redirect = "";	# file path used in #line directives.
+
+	if ($argc < 3) {
+		$redirect = "\"" . "../core/$ARGV[0]" . "\"";
+	} else {
+		$redirect = "\"" . $ARGV[2] . "\"";
 	}
 
 	open(INPUT, $ARGV[0]) or die croak "I can't open $ARGV[0]!";
@@ -53,12 +62,12 @@ sub main {
 		out => "",                  # the output text
 		depth => 0,                 # the recursive depth of the parser
         filename => $ARGV[0],       # the name of the input file
+        redirect => $redirect,
 		adhoc => {}                 # hash of adhoc function refs
 	};
 	parse($ctx);
 
 	open(OUTPUT, '>'.$ARGV[1]);
-	print OUTPUT "/* Generated from $ARGV[0] */\n\n";
 	print OUTPUT $ctx->{out};
 	close(OUTPUT);
 }
@@ -131,12 +140,18 @@ sub parse {
 	my $text = $ctx->{text};
 
 	my $newline = 1;
+	my $should_emit_line_directive = 1;
+
 	for (my $i=0; $i < scalar(@{$text->{chars}}); $i++) { # iterate over every character in the input
 		my $c = $text->{chars}->[$i];
 		my $line_no = $text->{line_map}->[$i];
 		$ctx->{current_line} = $line_no+1; # this is so macros can know what line they were called from
 
 		if ($newline) { # a newline just began
+			if($should_emit_line_directive) {
+				$out .= "#line" . " " . ($line_no + 1) . " " . $ctx->{redirect} . "\n";
+				$should_emit_line_directive = 0;
+			}
 			$newline = 0;
 			$ctx->{indent} = $text->{indents}->[$line_no]; # keep track of how many indents are on this line
 			$out .= spaces($ctx->{indent}); # and begin the line with the appropriate indentation
@@ -145,13 +160,20 @@ sub parse {
 		if ($c ne "~") {
 			$out .= $c;
 		} else {
-			my $line_str = "";
 			$ctx->{cur_pos} = $i;
 			
 			my $macro = resolve_macro($ctx);
 			
 			$i = $ctx->{cur_pos};
-			$out .= join("\n$line_str".spaces($ctx->{indent}), split(/\n/, $macro->{str})); 
+
+			my @lines = split(/\n/, $macro->{str});
+
+			if(scalar(@lines) > 1) { # expanded text introduced newlines so apply current indent and issue #line directive.
+				$should_emit_line_directive = 1;
+				$out .= join("\n".spaces($ctx->{indent}), @lines);
+			} else {
+				$out .= $macro->{str};
+			}
 		}
 
 		if ($c eq "\n") { # a newline begins on the next character
@@ -362,10 +384,19 @@ sub macro_decompose {
 	}
 	
 	my $output = "";
-	foreach my $key (@keys) {
+	my $newline = "\n";
+	my $i = scalar(@keys);
+
+	while($i > 0) {
+		my $key = @keys[--$i];
+
+		if($i == 0) {
+			$newline = "";
+		}
+
 		my $dat = $symbols{$key};
 		my $mask = sprintf("0x%x", (2 ** $dat->{len})-1);
-		$output .= sprintf("const uint16_t %s = ((%s)>>%u)&%s;\n", $key, $op, $dat->{start}, $mask);
+		$output .= sprintf("const uint16_t %s = ((%s)>>%u)&%s;%s", $key, $op, $dat->{start}, $mask, $newline);
 	}
 	
 	return $output;
