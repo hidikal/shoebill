@@ -1524,6 +1524,7 @@ void begin_definitions()
     { // FBcc
         inst_t *inst = new_inst("fbcc", "2", 1, "1111 001 01 s 0bcccc");
         add_range(inst, "1111 001 01x xxxxxx");
+        sub_range(inst, "1111 001 01x 1xxxxx"); // FIXME: Confirm condition code high bit set is an invalid instruction
         sub_range(inst, "1111 001 010 000000"); // fnop
         no_ea(inst);
     }
