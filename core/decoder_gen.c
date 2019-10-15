@@ -601,21 +601,21 @@ void begin_definitions()
     }
     
     {
-        inst_t *inst = new_inst("bclr_immediate", "all", 1, "0000 1000 11 MMMMMM");
+        inst_t *inst = new_inst("bclr_immediate", "all", 1, "0000 1000 10 MMMMMM");
         add_range(inst, "0000 1000 10 MMMMMM");
         ea_data_alterable(inst);
     }
     
 
     { // bfchg
-        inst_t *inst = new_inst("bfchg", "234", 1, "1110 1011 11 MMMMMM");
+        inst_t *inst = new_inst("bfchg", "234", 1, "1110 1010 11 MMMMMM");
         add_range(inst, "1110 1010 11 MMMMMM");
         ea_control_alterable(inst); // Yes, control_alterable
         ea_add_mode(inst, EA_000);
     }
     
     { // bfclr
-        inst_t *inst = new_inst("bfclr", "234", 1, "1110 1011 11 MMMMMM");
+        inst_t *inst = new_inst("bfclr", "234", 1, "1110 1100 11 MMMMMM");
         add_range(inst, "1110 1100 11 MMMMMM");
         ea_control_alterable(inst); // Yes, control_alterable
         ea_add_mode(inst, EA_000);
@@ -636,21 +636,21 @@ void begin_definitions()
     }
     
     { // bfffo
-        inst_t *inst = new_inst("bfffo", "234", 1, "1110 1110 11 MMMMMM");
+        inst_t *inst = new_inst("bfffo", "234", 1, "1110 1101 11 MMMMMM");
         add_range(inst, "1110 1101 11 MMMMMM"); // eratum: incorrect in 68kprm
         ea_control(inst); // Yes, control
         ea_add_mode(inst, EA_000);
     }
     
     { // bfins
-        inst_t *inst = new_inst("bfins", "234", 1, "1110 1011 11 MMMMMM");
+        inst_t *inst = new_inst("bfins", "234", 1, "1110 1111 11 MMMMMM");
         add_range(inst, "1110 1111 11 MMMMMM");
         ea_control_alterable(inst); // Yes, control_alterable
         ea_add_mode(inst, EA_000);
     }
     
     { // bfset
-        inst_t *inst = new_inst("bfset", "234", 1, "1110 1011 11 MMMMMM");
+        inst_t *inst = new_inst("bfset", "234", 1, "1110 1110 11 MMMMMM");
         add_range(inst, "1110 1110 11 MMMMMM");
         ea_control_alterable(inst); // Yes, control_alterable
         ea_add_mode(inst, EA_000);
@@ -1053,7 +1053,7 @@ void begin_definitions()
     }
     
     { // muls
-        inst_t *inst = new_inst("muls", "all", 1, "1100 rrr 011 MMMMMM");
+        inst_t *inst = new_inst("muls", "all", 1, "1100 rrr 111 MMMMMM");
         add_range(inst, "1100 xxx 111 MMMMMM");
         ea_data(inst); // Erratum: 68kprm says "data alterable", but means "data"
     }

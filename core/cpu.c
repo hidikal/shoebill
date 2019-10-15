@@ -751,7 +751,7 @@ static void inst_nbcd (void) {
 }
 
 static void inst_muls (void) {
-    ~decompose(shoe.op, 1100 rrr 011 MMMMMM);
+    ~decompose(shoe.op, 1100 rrr 111 MMMMMM);
     
     call_ea_read(M, 2);
     call_ea_read_commit(M, 2);
@@ -2731,7 +2731,7 @@ static void inst_bfextu (void) {
     
 static void inst_bfchg (void) {
     const uint16_t ext = nextword();
-    ~decompose(shoe.op, 1110 1011 11 MMMMMM);
+    ~decompose(shoe.op, 1110 1010 11 MMMMMM);
     ~decompose(ext, 0 000 Ffffff Wwwwww);
     
     const uint32_t width_ua = W ? (shoe.d[w]%32) : w; // unadjusted, [0, 31]
@@ -2787,7 +2787,7 @@ static void inst_bfexts (void) {
     
 static void inst_bfclr (void) {
     const uint16_t ext = nextword();
-    ~decompose(shoe.op, 1110 1011 11 MMMMMM);
+    ~decompose(shoe.op, 1110 1100 11 MMMMMM);
     ~decompose(ext, 0 000 Ffffff Wwwwww);
     
     const uint32_t width_ua = W ? (shoe.d[w]%32) : w; // unadjusted, [0, 31]
@@ -2813,7 +2813,7 @@ static void inst_bfclr (void) {
     
 static void inst_bfset (void) {
     const uint16_t ext = nextword();
-    ~decompose(shoe.op, 1110 1011 11 MMMMMM);
+    ~decompose(shoe.op, 1110 1110 11 MMMMMM);
     ~decompose(ext, 0 000 Ffffff Wwwwww);
     
     const uint32_t width_ua = W ? (shoe.d[w]%32) : w; // unadjusted, [0, 31]
@@ -2863,7 +2863,7 @@ static void inst_bftst (void) {
     
 static void inst_bfffo (void) {
     const uint16_t ext = nextword();
-    ~decompose(shoe.op, 1110 1110 11 MMMMMM);
+    ~decompose(shoe.op, 1110 1101 11 MMMMMM);
     ~decompose(ext, 0 rrr Ffffff Wwwwww);
     
     const uint32_t width_ua = W ? (shoe.d[w]%32) : w; // unadjusted, [0, 31]
@@ -2891,7 +2891,7 @@ static void inst_bfffo (void) {
     
 static void inst_bfins (void) {
     const uint16_t ext = nextword();
-    ~decompose(shoe.op, 1110 1011 11 MMMMMM);
+    ~decompose(shoe.op, 1110 1111 11 MMMMMM);
     ~decompose(ext, 0 rrr Ffffff Wwwwww);
     
     const uint32_t width_ua = W ? (shoe.d[w]%32) : w; // unadjusted, [0, 31]
@@ -2969,7 +2969,7 @@ static void inst_bclr_reg (void) {
 }
     
 static void inst_bclr_immediate (void) {
-    ~decompose(shoe.op, 0000 1000 11 MMMMMM);
+    ~decompose(shoe.op, 0000 1000 10 MMMMMM);
     const uint16_t ext = nextword();
     ~decompose(ext, 00000000 bbbbbbbb);
     
