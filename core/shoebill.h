@@ -82,6 +82,13 @@
 #define slikely(e) (__builtin_expect(!!(e), 1))
 #define sunlikely(e) (__builtin_expect(!!(e), 0))
 
+#ifndef SHOEBILL_EXTERN
+#ifdef __cplusplus
+#define SHOEBILL_EXTERN extern "C"
+#else
+#define SHOEBILL_EXTERN extern
+#endif
+#endif
 
 #ifdef __cplusplus
     extern "C" {
