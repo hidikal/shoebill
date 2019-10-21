@@ -24,7 +24,13 @@
  */
 
 
+#ifndef _SHOEBILL_DEBUGGER_H
+#define _SHOEBILL_DEBUGGER_H
+
+#ifndef _SHOEBILL_H
 #include "../core/shoebill.h"
+#endif
 
 SHOEBILL_EXTERN void *cpu_debugger_thread (void *arg);
 
+#endif

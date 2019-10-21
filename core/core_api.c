@@ -763,8 +763,13 @@ uint32_t shoebill_initialize(shoebill_config_t *config)
     pthread_mutex_init(&shoe.cpu_thread_lock, NULL);
     
     pthread_mutex_lock(&shoe.cpu_thread_lock);
-    if (!config->debug_mode)
+    if(config->debug_mode == 0) {
         pthread_create(&shoe.cpu_thread_pid, NULL, _cpu_thread, NULL);
+    } else {
+#if SHOEBILL_DEBUG_CLI
+        pthread_create(&shoe.cpu_thread_pid, NULL, cpu_debugger_thread, NULL);
+#endif
+    }
     
     return 1;
     

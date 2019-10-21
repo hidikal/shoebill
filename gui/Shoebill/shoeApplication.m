@@ -274,8 +274,7 @@
     config.ram_size = (uint32_t)memsize * 1024 * 1024;
     config.aux_kernel_path = rootKernelPathCString;
     config.rom_path = romPathCString;
-    config.debug_mode = 0;
-    
+
     [pramData getBytes:config.pram length:256];
     
     /* 
@@ -374,6 +373,12 @@ void pram_callback (void *param, const uint8_t addr, const uint8_t byte)
     
     bzero(&config, sizeof(shoebill_config_t));
     
+#if SHOEBILL_DEBUG_CLI
+    if(getenv("SHOEBILL_DEBUG") != NULL) {
+        config.debug_mode = 1;
+    }
+#endif
+
     if (![self fetchUserDefaults])
         return ;
     

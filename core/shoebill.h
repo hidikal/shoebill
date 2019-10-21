@@ -1105,4 +1105,9 @@ void nubus_ethernet_destroy_func(uint8_t);
     }
 #endif
 
+
+#if SHOEBILL_DEBUG_CLI
+#include "../debugger/debugger.h"
+#endif
+
 #endif // _SHOEBILL_H
