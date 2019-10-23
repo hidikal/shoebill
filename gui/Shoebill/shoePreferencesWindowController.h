@@ -27,17 +27,17 @@
 
 @interface shoePreferencesWindowController : NSWindowController {
 
-    IBOutlet __weak NSButton *apply, *cancel, *applyAndRun, *verbose, *ethernetEnabled;
-    IBOutlet __weak NSTextField *kernelPath, *romPath, *memorySize;
-    IBOutlet __weak NSTextField *scsiPath0, *scsiPath1, *scsiPath2, *scsiPath3, *scsiPath4, *scsiPath5, *scsiPath6;
-    IBOutlet __weak NSTextField *macAddress, *tapPath;
+    IBOutlet NSButton *apply, *cancel, *applyAndRun, *verbose, *ethernetEnabled;
+    IBOutlet NSTextField *kernelPath, *romPath, *memorySize;
+    IBOutlet NSTextField *scsiPath0, *scsiPath1, *scsiPath2, *scsiPath3, *scsiPath4, *scsiPath5, *scsiPath6;
+    IBOutlet NSTextField *macAddress, *tapPath;
     
-    IBOutlet __weak NSTextField *screenHeight1, *screenWidth1;
-    IBOutlet __weak NSTextField *screenHeight2, *screenWidth2;
-    IBOutlet __weak NSTextField *screenHeight3, *screenWidth3;
-    IBOutlet __weak NSTextField *screenHeight4, *screenWidth4;
+    IBOutlet NSTextField *screenHeight1, *screenWidth1;
+    IBOutlet NSTextField *screenHeight2, *screenWidth2;
+    IBOutlet NSTextField *screenHeight3, *screenWidth3;
+    IBOutlet NSTextField *screenHeight4, *screenWidth4;
     
-    IBOutlet __weak NSButton *enableScreen1, *enableScreen2, *enableScreen3, *enableScreen4;
+    IBOutlet NSButton *enableScreen1, *enableScreen2, *enableScreen3, *enableScreen4;
 }
 
 

@@ -36,7 +36,7 @@ struct shoe_app_pram_data_t
 @interface shoeApplication : NSApplication {
     rb_tree *keymap;
     shoeScreenWindowController *windowController[16];
-    IBOutlet __weak NSMenuItem *run_stop_menu_item;
+    IBOutlet NSMenuItem *run_stop_menu_item;
     
     NSTimer *pram_flush_timer;
     struct shoe_app_pram_data_t *pram;
